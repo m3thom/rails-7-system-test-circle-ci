@@ -29,7 +29,6 @@ jobs:
       CHROME_URL: http://localhost:3000
     steps:
       - checkout
-#      - browser-tools/install-chrome
       - ruby/install-deps
       - run:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
@@ -42,7 +41,6 @@ jobs:
           name: Database setup
       - run:
           command: bundle exec rake test:all
-#          command: bundle exec rake test
           name: Run all tests
 
 # Orchestrate jobs using workflows
