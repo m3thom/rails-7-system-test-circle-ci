@@ -4,12 +4,11 @@ version: 2.1
 # See: https://circleci.com/docs/orb-intro/
 orbs:
   ruby: circleci/ruby@2.0.1
-#  browser-tools: circleci/browser-tools@1.4.3
 
 jobs:
   test:
     docker:
-      - image: cimg/ruby:2.7.5-browsers
+      - image: cimg/ruby:2.7.5 # You might need `cimg/ruby:2.7.5-node` for JS install
       - image: cimg/postgres:14.8
         environment:
           POSTGRES_USER: ubuntu
