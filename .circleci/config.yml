@@ -1,0 +1,42 @@
+version: 2.1
+
+# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
+# See: https://circleci.com/docs/orb-intro/
+orbs:
+  ruby: circleci/ruby@2.0.1
+
+jobs:
+  test:
+    docker:
+      - image: cimg/ruby:2.7.5-browser
+      - image: cimg/postgres:14.8
+        environment:
+          POSTGRES_USER: ubuntu
+          POSTGRES_DB: circleci_test
+          POSTGRES_PASSWORD: ""
+    executor: ruby/default
+    environment:
+      BUNDLE_JOBS: '3'
+      BUNDLE_RETRY: '3'
+      DATABASE_URL: "postgres://ubuntu@localhost:5432/circleci_test"
+      RAILS_ENV: test
+      CI: true
+    steps:
+      - checkout
+      - ruby/install-deps
+      - run:
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+          name: Wait for DB
+      - run:
+          command: bundle exec rails db:schema:load --trace
+          name: Database setup
+      - run:
+          command: bundle exec rake test:all
+          name: Run all tests
+
+# Orchestrate jobs using workflows
+# See: https://circleci.com/docs/configuration-reference/#workflows
+workflows:
+   build_and_test:
+     jobs:
+       - test
