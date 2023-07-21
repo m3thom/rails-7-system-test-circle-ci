@@ -41,8 +41,8 @@ jobs:
           command: bundle exec rails db:schema:load --trace
           name: Database setup
       - run:
-#          command: bundle exec rake test:all
-          command: bundle exec rake test
+          command: bundle exec rake test:all
+#          command: bundle exec rake test
           name: Run all tests
 
 # Orchestrate jobs using workflows
