@@ -4,6 +4,7 @@ version: 2.1
 # See: https://circleci.com/docs/orb-intro/
 orbs:
   ruby: circleci/ruby@2.0.1
+  browser-tools: circleci/browser-tools@1.4.3
 
 jobs:
   test:
@@ -23,6 +24,7 @@ jobs:
       CI: true
     steps:
       - checkout
+      - browser-tools/install-chrome
       - ruby/install-deps
       - run:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
