@@ -1,24 +1,21 @@
-# README
+# A POC of system test on Circle-CI of ruby version 2.7.5
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Local development
 
-Things you may want to cover:
+## setup
 
-* Ruby version
+```bash
+rails db:create
+rails db:migrate
+```
 
-* System dependencies
+# Testing
 
-* Configuration
+```bash
+bundle rake test:all
+```
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Headless browser mode
+```bash
+CI=0 bundle rake test:all
+```
