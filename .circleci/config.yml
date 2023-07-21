@@ -15,6 +15,10 @@ jobs:
           POSTGRES_USER: ubuntu
           POSTGRES_DB: circleci_test
           POSTGRES_PASSWORD: ""
+      - image: browserless/chrome:1.59-chrome-stable
+        environment:
+          PORT: 3000
+          CONNECTION_TIMEOUT: 600000
     executor: ruby/default
     environment:
       BUNDLE_JOBS: '3'
@@ -22,6 +26,7 @@ jobs:
       DATABASE_URL: "postgres://ubuntu@localhost:5432/circleci_test"
       RAILS_ENV: test
       CI: true
+      CHROME_URL: http://localhost:3000
     steps:
       - checkout
 #      - browser-tools/install-chrome
@@ -29,6 +34,9 @@ jobs:
       - run:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
           name: Wait for DB
+      - run:
+          command: dockerize -wait http://localhost:3000 -timeout 1m
+          name: Wait for Chrome
       - run:
           command: bundle exec rails db:schema:load --trace
           name: Database setup
@@ -40,6 +48,6 @@ jobs:
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-   build_and_test:
-     jobs:
-       - test
+  build_and_test:
+    jobs:
+      - test
