@@ -26,12 +26,16 @@ class ArticlesTest < ApplicationSystemTestCase
     visit article_url(@article)
     click_on "Edit this article", match: :first
 
-    fill_in "Content", with: @article.content
-    fill_in "Title", with: @article.title
+    fill_in "Content", with: "Edit content"
+    fill_in "Title", with: "Edit title"
     click_on "Update Article"
 
     assert_text "Article was successfully updated"
     click_on "Back"
+
+    wait_for_network_idle!
+    assert_text "Edit content"
+    assert_text "Edit title"
   end
 
   test "should destroy Article" do
