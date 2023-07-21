@@ -30,17 +30,20 @@ version: 2.1
 # See: https://circleci.com/docs/orb-intro/
 orbs:
   ruby: circleci/ruby@2.0.1
-  browser-tools: circleci/browser-tools@1.4.3
 
 jobs:
   test:
     docker:
-      - image: cimg/ruby:2.7.5-browsers
+      - image: cimg/ruby:2.7.5 # You might need `cimg/ruby:2.7.5-node` for JS install
       - image: cimg/postgres:14.8
         environment:
           POSTGRES_USER: ubuntu
           POSTGRES_DB: circleci_test
           POSTGRES_PASSWORD: ""
+      - image: browserless/chrome:1.59-chrome-stable
+        environment:
+          PORT: 3000
+          CONNECTION_TIMEOUT: 600000
     executor: ruby/default
     environment:
       BUNDLE_JOBS: '3'
@@ -48,13 +51,16 @@ jobs:
       DATABASE_URL: "postgres://ubuntu@localhost:5432/circleci_test"
       RAILS_ENV: test
       CI: true
+      CHROME_URL: http://localhost:3000
     steps:
       - checkout
-      - browser-tools/install-chrome
       - ruby/install-deps
       - run:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
           name: Wait for DB
+      - run:
+          command: dockerize -wait http://localhost:3000 -timeout 1m
+          name: Wait for Chrome
       - run:
           command: bundle exec rails db:schema:load --trace
           name: Database setup
