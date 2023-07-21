@@ -33,7 +33,7 @@ class ArticlesTest < ApplicationSystemTestCase
     assert_text "Article was successfully updated"
     click_on "Back"
 
-    wait_for_network_idle!
+    page.driver.wait_for_network_idle
     assert_text "Edit content"
     assert_text "Edit title"
   end
