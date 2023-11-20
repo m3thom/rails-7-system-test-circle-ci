@@ -8,9 +8,9 @@ class ArticlesTest < ApplicationSystemTestCase
   test "visiting the index" do
     visit articles_url
     assert_selector "h1", text: "Articles"
-    mod_res = rand(10) % 2
-    is_even = 0
-    assert_equal mod_res, is_even, "Expected mod to be even"
+    # mod_res = rand(10) % 2
+    # is_even = 0
+    # assert_equal mod_res, is_even, "Expected mod to be even"
   end
 
   test "should create article" do
