@@ -41,7 +41,6 @@ jobs:
           command: bundle exec rails db:schema:load --trace
           name: Database setup
       - run:
-          #command: bundle exec rake test:all
           command: |
             circleci tests glob "test/**/*_test.rb" | circleci tests run --command="xargs bundle exec rake test:all" --verbose --split-by=timings
           name: Run all tests
@@ -49,6 +48,7 @@ jobs:
           path: test/reports
       - store_artifacts:
           path: test/screenshots
+          destination: screenshots
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
