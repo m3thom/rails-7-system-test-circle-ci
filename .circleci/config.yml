@@ -48,7 +48,7 @@ jobs:
       - store_test_results:
           path: test/reports
       - store_artifacts:
-          path: test/capybara/screenshots
+          path: test/screenshots
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
