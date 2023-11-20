@@ -7,6 +7,7 @@ orbs:
 
 jobs:
   test:
+    parallelism: 2
     resource_class: medium
     docker:
       - image: cimg/ruby:3.2.2 # You might need `cimg/ruby:3.2.2-node` for JS install
@@ -40,7 +41,9 @@ jobs:
           command: bundle exec rails db:schema:load --trace
           name: Database setup
       - run:
-          command: bundle exec rake test:all
+          #command: bundle exec rake test:all
+          command: |
+            circleci tests glob "test/**/*_test.rb" | circleci tests run --command="xargs bundle exec rake test:all" --verbose --split-by=timings
           name: Run all tests
       - store_test_results:
           path: test/reports
