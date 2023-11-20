@@ -1,6 +1,11 @@
-# A POC of system test on Circle-CI of ruby version 2.7.5
+# A POC of system test on Circle-CI of ruby version 3.2.2
 
 # Local development
+
+## Prerequisite
+
+- ruby 3.2.2
+- bundle 2.4.22
 
 ## setup
 
@@ -33,8 +38,10 @@ orbs:
 
 jobs:
   test:
+    parallelism: 2
+    resource_class: medium
     docker:
-      - image: cimg/ruby:2.7.5 # You might need `cimg/ruby:2.7.5-node` for JS install
+      - image: cimg/ruby:3.2.2 # You might need `cimg/ruby:3.2.2-node` for JS install
       - image: cimg/postgres:14.8
         environment:
           POSTGRES_USER: ubuntu
@@ -65,8 +72,14 @@ jobs:
           command: bundle exec rails db:schema:load --trace
           name: Database setup
       - run:
-          command: bundle exec rake test:all
+          command: |
+            circleci tests glob "test/**/*_test.rb" | circleci tests run --command="xargs bundle exec rake test:all" --verbose --split-by=timings
           name: Run all tests
+      - store_test_results:
+          path: test/reports
+      - store_artifacts:
+          path: test/reports/screenshots
+          destination: screenshots
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
