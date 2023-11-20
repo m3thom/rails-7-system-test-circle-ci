@@ -47,7 +47,7 @@ jobs:
       - store_test_results:
           path: test/reports
       - store_artifacts:
-          path: test/screenshots
+          path: test/reports/screenshots
           destination: screenshots
 
 # Orchestrate jobs using workflows
