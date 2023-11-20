@@ -7,8 +7,9 @@ orbs:
 
 jobs:
   test:
+    resource_class: medium
     docker:
-      - image: cimg/ruby:2.7.5 # You might need `cimg/ruby:2.7.5-node` for JS install
+      - image: cimg/ruby:3.2.2 # You might need `cimg/ruby:3.2.2-node` for JS install
       - image: cimg/postgres:14.8
         environment:
           POSTGRES_USER: ubuntu
@@ -41,6 +42,8 @@ jobs:
       - run:
           command: bundle exec rake test:all
           name: Run all tests
+      - store_test_results:
+          path: test/reports
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
