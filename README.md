@@ -101,3 +101,4 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include EvilSystems::Helpers
 end
 ```
+
