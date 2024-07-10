@@ -33,11 +33,12 @@ jobs:
 #      - browser-tools/install-chrome
       - run:
           command: |
-            wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+            export SUDO="sudo"
+            wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | $SUDO apt-key add -
             echo "Installing Chrome for ARM64"
-            sh -c 'echo "deb [arch=arm64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-            apt-get update
-            DEBIAN_FRONTEND=noninteractive apt-get install -y google-chrome-stable
+            $SUDO sh -c 'echo "deb [arch=arm64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+            $SUDO apt-get update
+            DEBIAN_FRONTEND=noninteractive $SUDO apt-get install -y google-chrome-${ORB_PARAM_CHANNEL}
             echo "test/verify installation"
             google-chrome-stable --version | grep "stable" >/dev/null 2>&1;
           name: Install chrome
