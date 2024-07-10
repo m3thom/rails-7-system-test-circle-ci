@@ -2,7 +2,7 @@ version: 2.1
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 # See: https://circleci.com/docs/orb-intro/
 orbs:
-  ruby: circleci/ruby@2.0.1
+  ruby: circleci/ruby@2.1.3
   browser-tools: circleci/browser-tools@1.4.6
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
     resource_class: arm.medium
     docker:
       - image: cimg/ruby:3.2.2 # You might need `cimg/ruby:3.2.2-node` for JS install
-      - image: cimg/postgres:14.8
+      - image: arm64v8/postgres:16.1
         environment:
           POSTGRES_USER: ubuntu
           POSTGRES_DB: circleci_test
@@ -21,7 +21,6 @@ jobs:
       #  environment:
       #    PORT: 3000
       #    CONNECTION_TIMEOUT: 600000
-    executor: ruby/default
     environment:
       BUNDLE_JOBS: '3'
       BUNDLE_RETRY: '3'
