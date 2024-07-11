@@ -28,7 +28,6 @@ jobs:
       DATABASE_URL: "postgres://ubuntu@localhost:5432/circleci_test"
       RAILS_ENV: test
       CI: true
-      CHROME_URL: http://localhost:3000
     steps:
       - checkout
       - browser-tools/install-chrome
