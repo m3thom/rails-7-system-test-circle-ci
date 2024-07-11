@@ -36,11 +36,15 @@ jobs:
           command: |
             mkdir -p $BROWSER_PATH
             sudo chown -R circleci:circleci $BROWSER_PATH
+            chmod -R 755 $BROWSER_PATH
       - run:
           command: yarn install --frozen-lockfile
           name: Install js dependencies
       - run:
-          command: yarn playwright install chromium --with-deps
+          command: |
+            yarn playwright install chromium --with-deps
+            # Verify installation
+            ls -la ~/.cache/ms-playwright
           name: Install Chrome
       - ruby/install-deps
       - run:
