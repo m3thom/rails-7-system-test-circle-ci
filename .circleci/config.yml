@@ -18,16 +18,16 @@ jobs:
           POSTGRES_DB: circleci_test
           POSTGRES_PASSWORD: ""
           POSTGRES_HOST_AUTH_METHOD: trust
-          # We will install chrome manually
-          PUPPETEER_SKIP_DOWNLOAD: true
-          # Tell grover to use this installed chrome path by playwright instead
-          BROWSER_PATH: /root/.cache/ms-playwright
     environment:
       BUNDLE_JOBS: '3'
       BUNDLE_RETRY: '3'
       DATABASE_URL: "postgres://ubuntu@localhost:5432/circleci_test"
       RAILS_ENV: test
       CI: true
+      # We will install chrome manually
+      PUPPETEER_SKIP_DOWNLOAD: true
+      # Tell grover to use this installed chrome path by playwright instead
+      BROWSER_PATH: /root/.cache/ms-playwright
     steps:
       - checkout
       - run:
