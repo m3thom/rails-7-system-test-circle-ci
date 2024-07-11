@@ -11,7 +11,7 @@ jobs:
     resource_class: medium
     docker:
       - image: cimg/ruby:3.2.2 # You might need `cimg/ruby:3.2.2-node` for JS install
-      - image: arm64v8/postgres:16.1
+      - image: postgres:16.1
         environment:
           POSTGRES_USER: ubuntu
           POSTGRES_DB: circleci_test
