@@ -1,0 +1,8 @@
+{
+  "name": "app",
+  "private": "true",
+  "dependencies": {
+    "puppeteer": "^22.12.1",
+    "playwright": "^1.45.1"
+  }
+}

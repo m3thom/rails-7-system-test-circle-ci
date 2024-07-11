@@ -34,3 +34,5 @@
 
 # Test artifacts
 /test/reports/*
+
+/node_modules
