@@ -35,8 +35,9 @@ jobs:
           name: Set up Playwright cache directory
           command: |
             mkdir -p /home/circleci/.cache/ms-playwright
-            sudo chown -R circleci:circleci /home/circleci/.cache/ms-playwright
+            sudo chown -R $USER:$USER /home/circleci/.cache/ms-playwright
             chmod -R 755 /home/circleci/.cache/ms-playwright
+            ls -la /home/circleci/.cache/ms-playwright
       - run:
           command: yarn install --frozen-lockfile
           name: Install js dependencies
@@ -53,6 +54,12 @@ jobs:
       - run:
           command: bundle exec rails db:test:prepare --trace
           name: Database setup
+      - run:
+          name: Verify Permissions Before Tests
+          command: |
+            echo "Verifying permissions before running tests:"
+            ls -la /home/circleci/.cache
+            ls -la /home/circleci/.cache/ms-playwright
       - run:
           command: |
             circleci tests glob "test/**/*_test.rb" | circleci tests run --command="xargs bundle exec rake test:all" --verbose --split-by=timings
