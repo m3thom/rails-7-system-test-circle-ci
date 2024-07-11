@@ -28,8 +28,8 @@ jobs:
       PUPPETEER_SKIP_DOWNLOAD: true
       # Tell grover to use this installed chrome path by playwright instead.
       # This is the same path from the "Install Chrome" step.
-      BROWSER_PATH: /usr/bin/google-chrome-stable
-      PLAYWRIGHT_BROWSERS_PATH: /usr/bin/google-chrome-stable
+      BROWSER_PATH: /home/circleci/.cache/ms-playwright
+      PLAYWRIGHT_BROWSERS_PATH: /home/circleci/.cache/ms-playwright
     steps:
       - checkout
       - run:
@@ -37,7 +37,7 @@ jobs:
           name: Install js dependencies
       - run:
           command: |
-            yarn playwright install chromium --with-deps
+            sudo yarn playwright install chromium --with-deps
           name: Install Chrome
       - ruby/install-deps
       - run:
