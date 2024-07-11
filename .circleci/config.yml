@@ -28,7 +28,7 @@ jobs:
       PUPPETEER_SKIP_DOWNLOAD: true
       # Tell grover to use this installed chrome path by playwright instead.
       # This is the same path from the "Install Chrome" step.
-      BROWSER_PATH: /home/circleci/.cache/ms-playwright
+      BROWSER_PATH: ./tmp/ms-playwright
       PLAYWRIGHT_BROWSERS_PATH: ./tmp/ms-playwright  # Use a project directory
     steps:
       - checkout
