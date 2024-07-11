@@ -28,15 +28,15 @@ jobs:
       PUPPETEER_SKIP_DOWNLOAD: true
       # Tell grover to use this installed chrome path by playwright instead.
       # This is the same path from the "Install Chrome" step.
-      BROWSER_PATH: ~/.cache/ms-playwright
+      BROWSER_PATH: /home/circleci/.cache/ms-playwright
     steps:
       - checkout
       - run:
           name: Set up Playwright cache directory
           command: |
-            mkdir -p $BROWSER_PATH
-            sudo chown -R circleci:circleci $BROWSER_PATH
-            chmod -R 755 $BROWSER_PATH
+            mkdir -p /home/circleci/.cache/ms-playwright
+            sudo chown -R circleci:circleci /home/circleci/.cache/ms-playwright
+            chmod -R 755 /home/circleci/.cache/ms-playwright
       - run:
           command: yarn install --frozen-lockfile
           name: Install js dependencies
@@ -44,7 +44,7 @@ jobs:
           command: |
             yarn playwright install chromium --with-deps
             # Verify installation
-            ls -la ~/.cache/ms-playwright
+            ls -la /home/circleci/.cache/ms-playwright
           name: Install Chrome
       - ruby/install-deps
       - run:
