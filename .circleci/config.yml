@@ -29,6 +29,7 @@ jobs:
       # Tell grover to use this installed chrome path by playwright instead.
       # This is the same path from the "Install Chrome" step.
       BROWSER_PATH: /home/circleci/.cache/ms-playwright
+      PLAYWRIGHT_BROWSERS_PATH: 0
     steps:
       - checkout
       - run:
