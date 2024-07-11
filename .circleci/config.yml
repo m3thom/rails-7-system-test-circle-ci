@@ -16,6 +16,7 @@ jobs:
           POSTGRES_USER: ubuntu
           POSTGRES_DB: circleci_test
           POSTGRES_PASSWORD: ""
+          POSTGRES_HOST_AUTH_METHOD: trust
       # Use circleci/browser-tools instead
       #- image: browserless/chrome:1.59-chrome-stable
       #  environment:
@@ -30,7 +31,7 @@ jobs:
       CHROME_URL: http://localhost:3000
     steps:
       - checkout
-#      - browser-tools/install-chrome
+      # - browser-tools/install-chrome
       - run:
           command: |
             export SUDO="sudo"
@@ -38,7 +39,7 @@ jobs:
             echo "Installing Chrome for ARM64"
             $SUDO sh -c 'echo "deb [arch=arm64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
             $SUDO apt-get update
-            DEBIAN_FRONTEND=noninteractive $SUDO apt-get install -y google-chrome-${ORB_PARAM_CHANNEL}
+            DEBIAN_FRONTEND=noninteractive $SUDO apt-get install -y google-chrome-stable
             echo "test/verify installation"
             google-chrome-stable --version | grep "stable" >/dev/null 2>&1;
           name: Install chrome
@@ -50,7 +51,7 @@ jobs:
           command: dockerize -wait http://localhost:3000 -timeout 1m
           name: Wait for Chrome
       - run:
-          command: bundle exec rails db:schema:load --trace
+          command: bundle exec rails db:test:prepare --trace
           name: Database setup
       - run:
           command: |
