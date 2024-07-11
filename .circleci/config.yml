@@ -24,10 +24,11 @@ jobs:
       DATABASE_URL: "postgres://ubuntu@localhost:5432/circleci_test"
       RAILS_ENV: test
       CI: true
-      # We will install chrome manually
+      # We will install chrome for ARM manually using playwright
       PUPPETEER_SKIP_DOWNLOAD: true
-      # Tell grover to use this installed chrome path by playwright instead
-      BROWSER_PATH: /root/.cache/ms-playwright
+      # Tell grover to use this installed chrome path by playwright instead.
+      # This is the same path from the "Install Chrome" step.
+      BROWSER_PATH: /home/circleci/.cache/ms-playwright
     steps:
       - checkout
       - run:
