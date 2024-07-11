@@ -8,7 +8,7 @@ orbs:
 jobs:
   test:
     parallelism: 2
-    resource_class: arm.medium
+    resource_class: medium
     docker:
       - image: cimg/ruby:3.2.2 # You might need `cimg/ruby:3.2.2-node` for JS install
       - image: arm64v8/postgres:16.1
@@ -31,18 +31,19 @@ jobs:
       CHROME_URL: http://localhost:3000
     steps:
       - checkout
-      # - browser-tools/install-chrome
-      - run:
-          command: |
-            export SUDO="sudo"
-            wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | $SUDO apt-key add -
-            echo "Installing Chrome for ARM64"
-            $SUDO sh -c 'echo "deb [arch=arm64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-            $SUDO apt-get update
-            DEBIAN_FRONTEND=noninteractive $SUDO apt-get install -y google-chrome-stable
-            echo "test/verify installation"
-            google-chrome-stable --version | grep "stable" >/dev/null 2>&1;
-          name: Install chrome
+      - browser-tools/install-chrome
+      # ARM issue: https://github.com/CircleCI-Public/browser-tools-orb/pull/73
+      #- run:
+      #    command: |
+      #      export SUDO="sudo"
+      #      wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | $SUDO apt-key add -
+      #      echo "Installing Chrome for ARM64"
+      #      $SUDO sh -c 'echo "deb [arch=arm64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+      #      $SUDO apt-get update
+      #      DEBIAN_FRONTEND=noninteractive $SUDO apt-get install -y google-chrome-stable
+      #      echo "test/verify installation"
+      #      google-chrome-stable --version | grep "stable" >/dev/null 2>&1;
+      #    name: Install chrome
       - ruby/install-deps
       - run:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
