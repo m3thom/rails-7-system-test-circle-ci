@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ show edit update destroy ]
+  before_action :set_article, only: %i[ show edit update destroy pdf ]
 
   # GET /articles or /articles.json
   def index
@@ -55,6 +55,15 @@ class ArticlesController < ApplicationController
       format.html { redirect_to articles_url, notice: "Article was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def pdf
+    html = render_to_string(layout: false)
+    # Grover.new accepts a URL or inline HTML and optional parameters for Puppeteer
+    grover = Grover.new(html)
+    # Get an inline PDF
+    pdf = grover.to_pdf
+    send_data pdf, filename: "article-#{@article.id}.pdf", disposition: 'inline'
   end
 
   private
