@@ -34,3 +34,8 @@
 
 # Test artifacts
 /test/reports/*
+
+/node_modules
+
+/test-results
+/playwright-report
