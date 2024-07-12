@@ -29,6 +29,9 @@ jobs:
       DATABASE_URL: "postgres://ubuntu@localhost:5432/circleci_test"
       RAILS_ENV: test
       CI: true
+      # Override chrome browser path for system test and Puppeteer
+      BROWSER_PATH: /usr/bin/google-chrome-stable
+      PUPPETEER_SKIP_DOWNLOAD: true
     steps:
       - checkout
       - browser-tools/install-chrome
