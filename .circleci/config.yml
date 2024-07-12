@@ -45,7 +45,7 @@ jobs:
       #      google-chrome-stable --version | grep "stable" >/dev/null 2>&1;
       #    name: Install chrome
       - ruby/install-deps
-      - node/install-packages:
+      - node-tools/install-packages:
           pkg-manager: yarn
       - run:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
