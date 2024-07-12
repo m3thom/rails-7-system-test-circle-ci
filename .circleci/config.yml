@@ -10,7 +10,7 @@ jobs:
     parallelism: 2
     resource_class: medium
     docker:
-      - image: cimg/ruby:3.2.2 # You might need `cimg/ruby:3.2.2-node` for JS install
+      - image: cimg/ruby:3.3.1 # You might need `cimg/ruby:3.3.1-node` for JS install
       - image: postgres:16.1
         environment:
           POSTGRES_USER: ubuntu
