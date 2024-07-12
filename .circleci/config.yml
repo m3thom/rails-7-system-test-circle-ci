@@ -4,13 +4,14 @@ version: 2.1
 orbs:
   ruby: circleci/ruby@2.1.3
   browser-tools: circleci/browser-tools@1.4.8
+  node-tools: circleci/node@5.2.0
 
 jobs:
   test:
     parallelism: 2
     resource_class: medium
     docker:
-      - image: cimg/ruby:3.3.1 # You might need `cimg/ruby:3.3.1-node` for JS install
+      - image: cimg/ruby:3.3.1-node
       - image: postgres:16.1
         environment:
           POSTGRES_USER: ubuntu
@@ -44,6 +45,8 @@ jobs:
       #      google-chrome-stable --version | grep "stable" >/dev/null 2>&1;
       #    name: Install chrome
       - ruby/install-deps
+      - node/install-packages:
+          pkg-manager: yarn
       - run:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
           name: Wait for DB
