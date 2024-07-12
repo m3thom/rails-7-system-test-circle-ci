@@ -12,7 +12,7 @@ jobs:
     parallelism: 2
     resource_class: arm.medium
     docker:
-      - image: cimg/ruby:3.2.2-node
+      - image: cimg/ruby:3.3.1-node
       - image: arm64v8/postgres
         environment:
           POSTGRES_USER: ubuntu
