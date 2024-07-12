@@ -47,12 +47,4 @@ class ArticlesTest < ApplicationSystemTestCase
 
     assert_text "Article was successfully destroyed"
   end
-
-  test "should get pdf" do
-    visit pdf_article_path(@article)
-    # The PDF takes some time to generate, wait for it.
-    # page.driver.wait_for_reload # Is not working
-    page.driver.wait_for_network_idle # This works
-    assert_current_path pdf_article_path(@article)
-  end
 end

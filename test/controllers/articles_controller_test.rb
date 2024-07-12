@@ -46,6 +46,12 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to articles_url
   end
 
+  test "should show article pdf" do
+    get pdf_article_url(@article)
+    assert_includes response.header['Content-Disposition'], "article-#{@article.id}.pdf"
+    assert_includes response.header['Content-Type'], "application/pdf"
+  end
+
   test "should create article 1" do
     assert_difference("Article.count") do
       post articles_url, params: { article: { content: @article.content, title: @article.title } }
