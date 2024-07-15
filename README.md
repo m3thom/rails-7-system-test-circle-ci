@@ -33,60 +33,47 @@ version: 2.1
 # See: https://circleci.com/docs/orb-intro/
 orbs:
   ruby: circleci/ruby@2.1.3
-  browser-tools: circleci/browser-tools@1.4.8
+  # Can switch back to use this orb if this issue is solved? https://github.com/CircleCI-Public/browser-tools-orb/pull/73
+  #browser-tools: circleci/browser-tools@1.4.8
   node-tools: circleci/node@5.2.0
 
 jobs:
   test:
     parallelism: 2
-    resource_class: medium
+    resource_class: arm.medium
     docker:
       - image: cimg/ruby:3.3.1-node
-      - image: postgres:16.1
+      - image: arm64v8/postgres
         environment:
           POSTGRES_USER: ubuntu
           POSTGRES_DB: circleci_test
           POSTGRES_PASSWORD: ""
           POSTGRES_HOST_AUTH_METHOD: trust
-      # Use circleci/browser-tools instead
-      #- image: browserless/chrome:1.59-chrome-stable
-      #  environment:
-      #    PORT: 3000
-      #    CONNECTION_TIMEOUT: 600000
     environment:
       BUNDLE_JOBS: '3'
       BUNDLE_RETRY: '3'
       DATABASE_URL: "postgres://ubuntu@localhost:5432/circleci_test"
       RAILS_ENV: test
       CI: true
-      # Override chrome browser path for system test and Puppeteer
-      BROWSER_PATH: /usr/bin/google-chrome-stable
+      # We will install chrome for ARM manually using playwright
       PUPPETEER_SKIP_DOWNLOAD: true
+      # Tell grover to use this installed chrome path by playwright instead.
+      # This is the same path from the "Install Chrome" step.
+      BROWSER_PATH: /home/circleci/.cache/ms-playwright/chromium-1124/chrome-linux/chrome
     steps:
       - checkout
-      - browser-tools/install-chrome
-      # ARM issue: https://github.com/CircleCI-Public/browser-tools-orb/pull/73
-      #- run:
-      #    command: |
-      #      export SUDO="sudo"
-      #      wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | $SUDO apt-key add -
-      #      echo "Installing Chrome for ARM64"
-      #      $SUDO sh -c 'echo "deb [arch=arm64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-      #      $SUDO apt-get update
-      #      DEBIAN_FRONTEND=noninteractive $SUDO apt-get install -y google-chrome-stable
-      #      echo "test/verify installation"
-      #      google-chrome-stable --version | grep "stable" >/dev/null 2>&1;
-      #    name: Install chrome
       - ruby/install-deps
       - node-tools/install-packages:
           pkg-manager: yarn
       - run:
+          command: |
+            yarn playwright install chromium --with-deps
+            # Verify installation
+            /home/circleci/.cache/ms-playwright/chromium-1124/chrome-linux/chrome --version
+          name: Install Chrome
+      - run:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
           name: Wait for DB
-      # Skip since chrome is ready from browser-tools/install-chrome
-      #- run:
-      #    command: dockerize -wait http://localhost:3000 -timeout 1m
-      #    name: Wait for Chrome
       - run:
           command: bundle exec rails db:test:prepare --trace
           name: Database setup
