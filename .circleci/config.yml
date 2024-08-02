@@ -34,19 +34,14 @@ jobs:
       PUPPETEER_SKIP_DOWNLOAD: true
     steps:
       - checkout
+      - run:
+          name: Glob files to test or stop execution if no file to test
+          command: |
+            mkdir -p tmp && \
+            >tmp/files-to-test.txt && \
+            circleci tests glob "test/**/*_test.rb" | circleci tests run --command=">tmp/files-to-test.txt xargs echo" --verbose --split-by=timings
+            [ -s tmp/files-to-test.txt ] || circleci-agent step halt #if a re-run and there are no tests to re-run for this parallel run, stop execution
       - browser-tools/install-chrome
-      # ARM issue: https://github.com/CircleCI-Public/browser-tools-orb/pull/73
-      #- run:
-      #    command: |
-      #      export SUDO="sudo"
-      #      wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | $SUDO apt-key add -
-      #      echo "Installing Chrome for ARM64"
-      #      $SUDO sh -c 'echo "deb [arch=arm64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-      #      $SUDO apt-get update
-      #      DEBIAN_FRONTEND=noninteractive $SUDO apt-get install -y google-chrome-stable
-      #      echo "test/verify installation"
-      #      google-chrome-stable --version | grep "stable" >/dev/null 2>&1;
-      #    name: Install chrome
       - ruby/install-deps
       - node-tools/install-packages:
           pkg-manager: yarn
@@ -62,7 +57,7 @@ jobs:
           name: Database setup
       - run:
           command: |
-            circleci tests glob "test/**/*_test.rb" | circleci tests run --command="xargs bundle exec rake test:all" --verbose --split-by=timings
+            bundle exec rails test --backtrace $(cat tmp/files-to-test.txt)
           name: Run all tests
       - store_test_results:
           path: test/reports
