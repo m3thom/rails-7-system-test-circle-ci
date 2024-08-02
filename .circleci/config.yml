@@ -39,7 +39,6 @@ jobs:
             >tmp/files-to-test.txt && \
             circleci tests glob "test/**/*_test.rb" | circleci tests run --command=">tmp/files-to-test.txt xargs echo" --verbose --split-by=timings
             [ -s tmp/files-to-test.txt ] || circleci-agent step halt #if a re-run and there are no tests to re-run for this parallel run, stop execution
-      - browser-tools/install-chrome
       - ruby/install-deps
       - node-tools/install-packages:
           pkg-manager: yarn
